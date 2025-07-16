@@ -40,9 +40,15 @@ VALIDATE $? "Enabling NodeJS 20"
 dnf install nodejs -y &>> $LOG_FILE_NAME
 VALIDATE $? "Installing NodeJs"
 
-useradd expense &>> $LOG_FILE_NAME
-VALIDATE $? "adding expense user"
-
+id expense &>>$LOG_FILE_NAME
+if [ $? -ne 0 ]
+then
+     useradd expense &>> $LOG_FILE_NAME
+     VALIDATE $? "adding expense user"
+else
+     echo -e "expense user already exists....$Y SKIPPING $N"
+fi
+     
 mkdir /app &>> $LOG_FILE_NAME
 VALIDATE $? "creating app directory"
 
@@ -59,15 +65,6 @@ VALIDATE $? "installing depencies"
 
 cp /home/ec2-user/expense-shellscript/backend.service /etc/systemd/system/backend.service
 
-systemctl daemon-reload &>> $LOG_FILE_NAME
-VALIDATE $? "Daemon reload"
-
-systemctl start backend &>> $LOG_FILE_NAME
-VALIDATE $? "starting backend"
-
-systemctl enable backend &>> $LOG_FILE_NAME
-VALIDATE $? "enabling backend"
-
 #prepare mysql schema
 
 dnf install mysql -y &>> $LOG_FILE_NAME
@@ -75,3 +72,12 @@ VALIDATE $? "installing mysql"
 
 mysql -h mysql.poojari.store -u root -pExpenseApp@1 < /app/schema/backend.sql &>> $LOG_FILE_NAME
 VALIDATE $? "setting up the transaction schema and tables"
+
+systemctl daemon-reload &>> $LOG_FILE_NAME
+VALIDATE $? "Daemon reload"
+
+systemctl enable backend &>> $LOG_FILE_NAME
+VALIDATE $? "enabling backend"
+
+systemctl start backend &>> $LOG_FILE_NAME
+VALIDATE $? "starting backend"
