@@ -21,6 +21,7 @@ VALIDATE(){
  fi
 }
 
+mkdir -p $LOG_FOLDER
 echo "script started executing at: $TIMESTAMP" &>> $LOG_FILE_NAME
 
 CHECK_ROOT(){
