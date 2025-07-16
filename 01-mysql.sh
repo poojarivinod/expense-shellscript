@@ -41,7 +41,7 @@ systemctl start mysqld &>> $LOG_FILE_NAME
 VALIDATE $? "STARTING MySQL server"
 
 mysql -h mysql.poojari.store -u root -pExpenseApp@1 -e 'show databases;' &>> $LOG_FILE_NAME
-if ( $? -ne 0 )
+if [ $? -ne 0 ]
 then
      mysql_secure_installation --set-root-pass ExpenseApp@1
      VALIDATE $? "Setting Root Password"
