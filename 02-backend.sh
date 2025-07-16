@@ -67,14 +67,6 @@ VALIDATE $? "installing depencies"
 
 cp /home/ec2-user/expense-shellscript/backend.service /etc/systemd/system/backend.service
 
-#prepare mysql schema
-
-dnf install mysql -y &>> $LOG_FILE_NAME
-VALIDATE $? "installing mysql"
-
-mysql -h mysql.poojari.store -u root -pExpenseApp@1 < /app/schema/backend.sql &>> $LOG_FILE_NAME
-VALIDATE $? "setting up the transaction schema and tables"
-
 systemctl daemon-reload &>> $LOG_FILE_NAME
 VALIDATE $? "Daemon reload"
 
@@ -83,3 +75,12 @@ VALIDATE $? "enabling backend"
 
 systemctl start backend &>> $LOG_FILE_NAME
 VALIDATE $? "starting backend"
+
+#prepare mysql schema
+
+dnf install mysql -y &>> $LOG_FILE_NAME
+VALIDATE $? "installing mysql"
+
+mysql -h mysql.poojari.store -u root -pExpenseApp@1 < /app/schema/backend.sql &>> $LOG_FILE_NAME
+VALIDATE $? "setting up the transaction schema and tables"
+
