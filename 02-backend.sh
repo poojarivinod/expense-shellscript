@@ -57,6 +57,8 @@ VALIDATE $? "downloading backend"
 
 cd /app
 
+rm -rf /app/* 
+
 unzip /tmp/backend.zip &>> $LOG_FILE_NAME
 VALIDATE $? "unzip the file"
 
